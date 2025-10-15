@@ -8,6 +8,14 @@ from time import sleep
 import pandas as pd
 
 
+
+#TODO
+#Дописать парсер одной страницы 
+#Написать Сохраниение данных
+#Написать Логи
+#Графики
+
+
 url = 'https://rabota.by/search/vacancy?text=%D0%A1%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D1%81%D1%82+%D0%BF%D0%BE+%D0%BA%D0%B8%D0%B1%D0%B5%D1%80%D0%B1%D0%B5%D0%B7%D0%BE%D0%BF%D0%B0%D1%81%D0%BD%D0%BE%D1%81%D1%82%D0%B8&salary=&ored_clusters=true&excluded_text=&area=1002&page=1&search'
 
 options = webdriver.ChromeOptions()
@@ -41,7 +49,7 @@ def parser_list(url, time_wait:int, driver:webdriver.Chrome) -> list:
 def parser_vacancy(vacancy:str, time_wait, driver:webdriver.Chrome):
     driver = get_page(vacancy,driver)
     sleep(time_wait)
-    
+
 
 
 
