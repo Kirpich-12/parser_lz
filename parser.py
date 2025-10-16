@@ -44,15 +44,24 @@ def get_page(url: str, driver: webdriver.Chrome) -> webdriver.Chrome:
     return driver
 
 def format_selery(s: str) -> int | float:
+    flag = False
+    if '₽' in s:
+        flag = True
     numbers = re.findall(r'\d[\d\s]*', s)
     nums = [int(n.replace(' ', '')) for n in numbers]
     
     if not nums:
         return None
     elif len(nums) == 1:
-        return nums[0]
+        ans = nums[0]
     else:
-        return sum(nums) / len(nums)
+        ans =  sum(nums) / len(nums)
+    
+    if flag:
+        ans = ans * 0.043
+        logger.error('rr was founded')
+    
+    return ans
 
 def analyze_csv(filename: str = "res.csv"):
     df = pd.read_csv(filename)
@@ -93,7 +102,7 @@ def safe_text(path:str, driver:webdriver.Chrome):
 def parser_vacancy(vacancy: str):
     driver = get_driver()
     driver.get(vacancy)
-    sleep(1)
+    sleep(2)
     try:
         name_raw = driver.find_element(By.CSS_SELECTOR, "[data-qa='vacancy-title']")
         names_raw_list = name_raw.find_elements(By.TAG_NAME, 'span')
@@ -142,7 +151,7 @@ def save_to_csv(data: list, filename: str = 'res.csv'):
 
 def main():
     driver = get_driver()
-    num_pages = 2
+    num_pages = 1
     all_links = []
     for i in range(num_pages):
         all_links += parser_list(url(i), 1, driver)
@@ -150,7 +159,7 @@ def main():
 
     logger.info(f" Найдено {len(all_links)} вакансий.")
 
-    with Pool(processes=10) as pool:
+    with Pool(processes=5) as pool:
         results = pool.map(parser_vacancy, all_links)
 
     logger.info(f"\n {len(results)} вакансий.")
